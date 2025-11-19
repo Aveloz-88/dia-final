@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluciones para el Cambio Climático</title>
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at 10% 20%, rgba(46,125,50,0.06), transparent 10%),
+                        radial-gradient(circle at 90% 80%, rgba(76,175,80,0.06), transparent 10%),
+                        linear-gradient(135deg, #eafaf1 0%, #dff5e4 40%, #c8e6c9 100%);
+            background-attachment: fixed;
+            color: #1b4332;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            animation: hueShift 20s linear infinite;
+        }
+
+        @keyframes hueShift {
+            0% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(8deg); }
+            100% { filter: hue-rotate(0deg); }
+        }
+
+        /* smooth scrolling for in-page navigation */
+        html { scroll-behavior: smooth; }
+
+        /* Soft blurred forest-like background (decorative) */
+        body::before{
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 10% 25%, rgba(20,80,34,0.22), transparent 12%),
+                radial-gradient(circle at 28% 35%, rgba(30,120,50,0.18), transparent 14%),
+                radial-gradient(circle at 50% 20%, rgba(24,98,40,0.16), transparent 15%),
+                radial-gradient(circle at 75% 30%, rgba(18,70,30,0.12), transparent 18%),
+                linear-gradient(180deg, rgba(245,255,250,0.35), rgba(220,245,230,0.35));
+            /* more subtle: larger blur, desaturated and darker */
+            filter: blur(12px) saturate(0.65) contrast(0.88) grayscale(0.15);
+            opacity: 0.42;
+        }
+        /* soft dark overlay so game elements remain legible */
+        body::after{
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(5,10,15,0.18), rgba(10,15,20,0.22));
+            mix-blend-mode: normal;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 620px;
+        }
+
+        .game-area { 
+            background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(240,255,245,0.7));
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(34,60,40,0.08);
+            position: relative;
+        }
+
+        .game-controls button {
+            background: linear-gradient(180deg,#43a047,#2e7d32);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(46,125,50,0.18);
+            margin: 0 6px;
+        }
+
+        /* Pause button: yellow */
+        .game-controls button#pauseBtn { background: linear-gradient(180deg,#ffd54f,#ffca28); color: #222; box-shadow: 0 3px 8px rgba(255,193,7,0.15);} 
+
+        /* Restart button: red */
+        .game-controls button#restartBtn { background: linear-gradient(180deg,#ff5252,#e53935); box-shadow: 0 3px 8px rgba(229,57,53,0.18);} 
+
+    /* Change character button: blue */
+    .game-controls button#changeCharBtn { background: linear-gradient(180deg,#42a5f5,#1e88e5); box-shadow: 0 3px 8px rgba(30,136,229,0.15); }
+
+        .game-controls span { font-family: 'Inter', Arial, sans-serif; }
+
+        .second-image {
+            margin: 40px auto;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px 10px 0 0;
+            display: block;
+        }
+
+        .image-description {
+            padding: 15px;
+            color: #333;
+            font-size: 1.1em;
+            background-color: #f9f9f9;
+            border-radius: 0 0 10px 10px;
+            margin-top: 10px;
+            text-align: left;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #f5f5f5;
+            border: 2px dashed #4caf50;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1; /* keep content above decorative background */
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .solutions-area {
+            background-color: #f5f5f5;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 300px;
+        }
+
+        .advanced-solutions {
+            margin-top: 30px;
+        }
+
+        .solution-item {
+            background-color: #fff;
+            border-left: 4px solid #2e7d32;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .solution-item h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .climate-impact {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .climate-impact h2 {
+            color: #e65100;
+            margin-top: 0;
+        }
+
+        .earth-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            margin-top: 40px;
+        }
+
+        /* small author tag in corner */
+        #authorTag{
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            background: rgba(255,255,255,0.72);
+            color: #1b4332;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            z-index: 1100;
+            pointer-events: none;
+            backdrop-filter: blur(4px) saturate(0.9);
+            opacity: 0.95;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+        /* Top banner styles */
+        .top-banner{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            justify-content:center;
+            background: rgba(255,255,255,0.85);
+            padding:8px 10px;
+            border-radius:10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin: 18px 0;
+        }
+        .top-banner a{
+            color: #135e2a;
+            text-decoration: none;
+            padding:6px 10px;
+            border-radius:6px;
+            font-weight:600;
+            background: linear-gradient(180deg, rgba(20,140,70,0.06), transparent);
+        }
+        .top-banner a:hover, .top-banner a:focus{
+            background: rgba(46,125,50,0.12);
+            outline: none;
+        }
+
+        /* Character menu overlay */
+        .char-menu{
+            position:absolute;
+            inset:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background: rgba(10,12,10,0.35);
+            z-index: 8;
+            pointer-events:auto;
+            border-radius: 10px;
+        }
+        .char-menu-inner{
+            background: #fff;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            text-align:center;
+            max-width:520px;
+            width:90%;
+        }
+        .char-grid{ display:flex; gap:12px; justify-content:center; margin-top:12px; }
+        .char-slot{ cursor:pointer; padding:6px; border-radius:8px; border:2px solid transparent; width:84px; }
+        .char-slot.selected{ border-color: #2e7d32; box-shadow: 0 4px 12px rgba(46,125,50,0.12); }
+        .char-preview{ display:block; margin:0 auto; background:#f5f5f5; border-radius:8px; }
+        .char-label{ font-size:0.9em; margin-top:6px; color:#333 }
+        .char-upload{ margin-top:6px; font-size:0.8em; }
+    </style>
+</head>
+<body>
+    <header id="inicio">
+        <div class="earth-icon">🌍</div>
+        <h1>Soluciones para el Cambio Climático</h1>
+    </header>
+
+    <div class="container">
+        <!-- Top navigation banner to jump to sections -->
+        <nav class="top-banner" role="navigation" aria-label="Navegación de la página">
+            <a href="#inicio">Inicio</a>
+            <a href="#propuestas">Propuestas</a>
+            <a href="#desarrolladas">Soluciones desarrolladas</a>
+            <a href="#minijuego">Minijuego</a>
+            <a href="#impacto">¿Por qué es perjudicial?</a>
+            <button id="langBtn" style="margin-left:12px;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;background:#1976d2;color:#fff;font-weight:600" aria-label="Cambiar idioma">EN</button>
+            <a id="enterLink" href="https://example.com" target="_blank" rel="noopener noreferrer" style="margin-left:10px;padding:6px 10px;border-radius:6px;background:#ff7043;color:#fff;text-decoration:none;font-weight:700;display:inline-block" aria-label="Entrar - abrir en nueva pestaña">Entrar</a>
+        </nav>
+        <div class="image-container">
+            <img src="calentamiento-global-620x370.jpg" alt="Tu ayuda puede ser clave para la salvacion del planeta">
+            <div class="image-description">
+                Tu ayuda puede ser clave para la salvación del planeta. Juntos podemos combatir el cambio climático implementando estas soluciones en nuestra vida diaria.
+            </div>
+        </div>
+        <div class="content-box">
+            <h2 id="propuestas">Propuestas de Solución</h2>
+            <p>En este espacio, compartiremos soluciones efectivas para combatir el cambio climático,las cuales puedes hacer ahora mismo facilmente-+
+                -. Cada acción cuenta para crear un futuro más sostenible.</p>
+            
+            <div class="solutions-area">
+                <p>1. Usar energías renovables como la solar y eólica en lugar de combustibles fósiles. Los combustibles fósiles hacen mucho daño al medio ambiente ya que emiten gases de efecto invernadero que contribuyen al calentamiento global. Al cambiar a energías renovables, podemos reducir significativamente nuestra huella de carbono y proteger el planeta para las futuras generaciones.</p>
+
+                <p>2. Usar menos los vehículos que usan gasolina o diesel y optar por caminar, andar en bicicleta o usar transporte público. Esto ayuda a reducir las emisiones de gases contaminantes y mejora la calidad del aire en nuestras ciudades.</p>
+
+                <p>3. Reducir, reutilizar y reciclar. Al minimizar los residuos que generamos, podemos disminuir la cantidad de basura que termina en los vertederos y reducir la contaminación del suelo y el agua. Además, reciclar materiales como papel, plástico y vidrio ayuda a conservar recursos naturales y a reducir la energía necesaria para producir nuevos productos.</p>
+
+                <p>4. Reducir uso de plásticos de un solo uso como bolsas, botellas y utensilios. Optar por alternativas reutilizables o biodegradables ayuda a disminuir la contaminación plástica en nuestros océanos y ecosistemas.</p>
+
+                <p>5. Reducir consumo de agua y carne. Al reducir nuestro consumo de agua y carne, podemos contribuir a la conservación de recursos naturales y a la reducción de la huella de carbono global.</p>
+            </div>
+
+            <div id="desarrolladas" class="advanced-solutions">
+                <h2>Soluciones más desarrolladas</h2>
+                
+                <div class="solution-item">
+                    <h3>1. Establecimiento de políticas ambientales</h3>
+                    <p>Los gobiernos deben implementar políticas efectivas para combatir el cambio climático:</p>
+                    <ul>
+                        <li>Crear legislación que limite las emisiones de gases de efecto invernadero</li>
+                        <li>Establecer impuestos sobre el carbono</li>
+                        <li>Ofrecer incentivos para la adopción de energías renovables</li>
+                        <li>Implementar regulaciones para la protección de ecosistemas</li>
+                    </ul>
+                </div>
+
+                <div class="solution-item">
+                    <h3>2. Acuerdos globales de cooperación</h3>
+                    <p>La colaboración internacional es fundamental para abordar el cambio climático:</p>
+                    <ul>
+                        <li>Establecer metas conjuntas de reducción de emisiones</li>
+                        <li>Compartir tecnologías y conocimientos entre países</li>
+                        <li>Crear fondos internacionales para proyectos ambientales</li>
+                        <li>Desarrollar estrategias coordinadas de adaptación al cambio climático</li>
+                    </ul>
+                </div>
+
+                <div class="solution-item">
+                    <h3>3. Educación ambiental para jóvenes</h3>
+                    <p>Integrar la educación sobre el cambio climático en las escuelas:</p>
+                    <ul>
+                        <li>Incluir temas ambientales en el currículo escolar</li>
+                        <li>Organizar proyectos prácticos de conservación</li>
+                        <li>Fomentar la participación en iniciativas ecológicas</li>
+                        <li>Crear clubes y grupos ambientales en las escuelas</li>
+                    </ul>
+                </div>
+
+                <div class="solution-item">
+                    <h3>4. Reforestación y limpieza de ecosistemas</h3>
+                    <p>Restaurar y proteger nuestros ecosistemas naturales:</p>
+                    <ul>
+                        <li>Organizar campañas de plantación de árboles</li>
+                        <li>Realizar limpiezas regulares de playas y ríos</li>
+                        <li>Proteger áreas naturales existentes</li>
+                        <li>Crear corredores verdes en zonas urbanas</li>
+                    </ul>
+                </div>
+
+                <div class="solution-item">
+                    <h3>5. Mejora de la eficiencia energética</h3>
+                    <p>Implementar medidas para optimizar el uso de energía:</p>
+                    <ul>
+                        <li>Modernizar edificios con tecnologías de ahorro energético</li>
+                        <li>Mejorar los sistemas de transporte público</li>
+                        <li>Desarrollar redes eléctricas inteligentes</li>
+                        <li>Fomentar la construcción sostenible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="image-container second-image">
+                <img src="dia-mundial-del-cambio-climatico-web-1024x576.jpg" alt="Impacto del cambio climático en nuestro planeta">
+                <div class="image-description">
+                    El cambio climático está afectando a nuestro planeta de manera significativa. Es hora de tomar acción.
+                </div>
+            </div>
+
+            <div id="impacto" class="climate-impact">
+                <h2>¿Por qué es perjudicial el cambio climático?</h2>
+                <p>El cambio climático representa una de las mayores amenazas para nuestro planeta y sus habitantes:</p>
+                <ul>
+                    <li><strong>Aumento del nivel del mar:</strong> Amenaza a comunidades costeras y puede causar la pérdida de territorios habitables.</li>
+                    <li><strong>Eventos climáticos extremos:</strong> Mayor frecuencia de huracanes, sequías e inundaciones que afectan a millones de personas.</li>
+                    <li><strong>Pérdida de biodiversidad:</strong> Extinción de especies y destrucción de ecosistemas vitales.</li>
+                    <li><strong>Inseguridad alimentaria:</strong> Afectación de cultivos y reducción de la producción de alimentos.</li>
+                    <li><strong>Problemas de salud:</strong> Aumento de enfermedades y riesgos para la salud pública.</li>
+                </ul>
+                <p>Actuar ahora es fundamental para proteger nuestro futuro y el de las próximas generaciones.</p>
+            </div>
+        </div>
+
+            <!-- Minijuego: Atrapa la hoja -->
+            <section id="minijuego" style="margin-top:30px;">
+                <h2>Minijuego: Atrapa la hoja</h2>
+                <p>Controla la cesta con las teclas izquierda/derecha o arrastrando/tocando. Atrapa las hojas verdes para ganar puntos y evita las bolas grises.</p>
+                <div class="game-area">
+                    <canvas id="gameCanvas" width="620" height="300" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;background:#e8fdf0;border:2px solid #c8f0d8"></canvas>
+                    <!-- Character selection menu (initial overlay) -->
+                    <div id="charMenu" class="char-menu" role="dialog" aria-label="Seleccion de personaje">
+                        <div class="char-menu-inner">
+                            <h3>elige tu cocomoquinho!</h3>
+                            <div class="char-grid">
+                                <div class="char-slot" data-index="0">
+                                    <canvas class="char-preview" width="64" height="64"></canvas>
+                                    <div class="char-label">Default</div>
+                                </div>
+                                <div class="char-slot" data-index="1">
+                                    <canvas class="char-preview" width="64" height="64"></canvas>
+                                    <div class="char-label small" data-fname></div>
+                                </div>
+                                <div class="char-slot" data-index="2">
+                                    <canvas class="char-preview" width="64" height="64"></canvas>
+                                    <div class="char-label small" data-fname></div>
+                                </div>
+                                <div class="char-slot" data-index="3">
+                                    <canvas class="char-preview" width="64" height="64"></canvas>
+                                    <div class="char-label small" data-fname></div>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px;text-align:center;">
+                                <button id="menuStartBtn" style="padding:8px 14px;border-radius:8px;background:#2e7d32;color:#fff;border:none;cursor:pointer;font-weight:600">Comenzar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-controls" style="text-align:center;margin-top:10px;">
+                        <button id="startBtn">Start</button>
+                        <button id="pauseBtn" aria-pressed="false">Pausa</button>
+                        <button id="restartBtn">Restart</button>
+                        <button id="changeCharBtn">Cambiar personaje</button>
+                        <span id="scoreDisplay" style="margin-left:12px;font-weight:600;color:#2e7d32">Puntos: 0</span>
+                        <span id="timeDisplay" style="margin-left:12px;color:#666">Tiempo: 0s</span>
+                    </div>
+                </div>
+            </section>
+
+        <footer>
+            <p>Juntos podemos hacer la diferencia en la lucha contra el cambio climático</p>
+        </footer>
+    </div>
+    <script>
+        (function(){
+            // Simple catch-the-leaf game
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const startBtn = document.getElementById('startBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const langBtn = document.getElementById('langBtn');
+
+            let width = canvas.width;
+            let height = canvas.height;
+            let basket = { x: width/2 - 35, y: height - 30, w: 70, h: 20 };
+            let items = []; // falling items
+            let score = 0;
+            let explosions = []; // {x,y,r,alpha,life}
+            let running = false;
+            let startTime = 0;
+            let elapsed = 0;
+            let rafId = null; // track requestAnimationFrame id to allow clean cancel
+            const MAX_ITEMS = 60; // hard cap to avoid overload on resume/pause
+            let keys = {};
+
+            // language state: 'es' = Spanish (default), 'en' = English
+            let currentLang = 'es';
+
+            // translation map: keys used by applyLanguage
+            const translations = {
+                es: {
+                    title: 'Soluciones para el Cambio Climático',
+                    header: 'Soluciones para el Cambio Climático',
+                    nav_inicio: 'Inicio',
+                    nav_propuestas: 'Propuestas',
+                    nav_desarrolladas: 'Soluciones desarrolladas',
+                    nav_minijuego: 'Minijuego',
+                    nav_impacto: '¿Por qué es perjudicial?',
+                    image_description: 'Tu ayuda puede ser clave para la salvación del planeta. Juntos podemos combatir el cambio climático implementando estas soluciones en nuestra vida diaria.',
+                    propuestas_heading: 'Propuestas de Solución',
+                    solutions_html: `
+                        <p>1. Usar energías renovables como la solar y eólica en lugar de combustibles fósiles. Los combustibles fósiles hacen mucho daño al medio ambiente ya que emiten gases de efecto invernadero que contribuyen al calentamiento global. Al cambiar a energías renovables, podemos reducir significativamente nuestra huella de carbono y proteger el planeta para las futuras generaciones.</p>
+
+                        <p>2. Usar menos los vehículos que usan gasolina o diesel y optar por caminar, andar en bicicleta o usar transporte público. Esto ayuda a reducir las emisiones de gases contaminantes y mejora la calidad del aire en nuestras ciudades.</p>
+
+                        <p>3. Reducir, reutilizar y reciclar. Al minimizar los residuos que generamos, podemos disminuir la cantidad de basura que termina en los vertederos y reducir la contaminación del suelo y el agua. Además, reciclar materiales como papel, plástico y vidrio ayuda a conservar recursos naturales y a reducir la energía necesaria para producir nuevos productos.</p>
+
+                        <p>4. Reducir uso de plásticos de un solo uso como bolsas, botellas y utensilios. Optar por alternativas reutilizables o biodegradables ayuda a disminuir la contaminación plástica en nuestros océanos y ecosistemas.</p>
+
+                        <p>5. Reducir consumo de agua y carne. Al reducir nuestro consumo de agua y carne, podemos contribuir a la conservación de recursos naturales y a la reducción de la huella de carbono global.</p>
+                    `,
+                    desarrolladas_heading: 'Soluciones más desarrolladas',
+                    desarrolladas_html: document.querySelector('.advanced-solutions') ? document.querySelector('.advanced-solutions').innerHTML : '',
+                    impacto_heading: '¿Por qué es perjudicial el cambio climático?',
+                    impacto_html: document.querySelector('.climate-impact') ? document.querySelector('.climate-impact').innerHTML : '',
+                    menu_title: 'elige tu cocomoquinho!',
+                    menu_start: 'Comenzar',
+                    startBtn: 'Iniciar',
+                    pause: 'Pausa',
+                    resume: 'Reanudar',
+                    restart: 'Reiniciar',
+                        changeCharBtnLabel: 'Cambiar personaje',
+                    scoreLabel: 'Puntos: ',
+                    timeLabel: 'Tiempo: ',
+                    minigame_heading: 'Minijuego: Atrapa la hoja',
+                    minigame_paragraph: 'Controla la cesta con las teclas izquierda/derecha o arrastrando/tocando. Atrapa las hojas verdes para ganar puntos y evita las bolas grises.',
+                    footer: 'Juntos podemos hacer la diferencia en la lucha contra el cambio climático'
+                },
+                en: {
+                    title: 'Solutions for Climate Change',
+                    header: 'Solutions for Climate Change',
+                    nav_inicio: 'Home',
+                    nav_propuestas: 'Proposals',
+                    nav_desarrolladas: 'Developed solutions',
+                    nav_minijuego: 'Minigame',
+                    nav_impacto: 'Why is it harmful?',
+                    image_description: 'Your help can be key to saving the planet. Together we can fight climate change by adopting these solutions in our daily lives.',
+                    propuestas_heading: 'Proposed Solutions',
+                    solutions_html: `
+                        <p>1. Use renewable energy such as solar and wind instead of fossil fuels. Fossil fuels release greenhouse gases that cause global warming. Switching to renewables significantly reduces our carbon footprint and helps protect the planet for future generations.</p>
+
+                        <p>2. Reduce reliance on gasoline/diesel vehicles; choose walking, cycling, or public transport. This reduces polluting emissions and improves air quality in our cities.</p>
+
+                        <p>3. Reduce, reuse, and recycle. Minimizing waste reduces landfill use and pollution. Recycling materials like paper, plastic, and glass conserves resources and lowers the energy needed to manufacture new products.</p>
+
+                        <p>4. Cut single-use plastics such as bags, bottles, and utensils. Opt for reusable or biodegradable alternatives to reduce plastic pollution in oceans and ecosystems.</p>
+
+                        <p>5. Lower water and meat consumption. Reducing water use and meat intake helps conserve natural resources and decrease the global carbon footprint.</p>
+                    `,
+                    desarrolladas_heading: 'Most developed solutions',
+                    desarrolladas_html: `
+                        <h2>Most developed solutions</h2>
+
+                        <div class="solution-item">
+                            <h3>1. Environmental policy making</h3>
+                            <p>Governments must implement effective policies to tackle climate change:</p>
+                            <ul>
+                                <li>Create legislation that limits greenhouse gas emissions</li>
+                                <li>Establish carbon pricing or taxes</li>
+                                <li>Offer incentives for renewable energy adoption</li>
+                                <li>Enforce regulations to protect ecosystems</li>
+                            </ul>
+                        </div>
+
+                        <div class="solution-item">
+                            <h3>2. Global cooperation agreements</h3>
+                            <p>International collaboration is essential to address climate change:</p>
+                            <ul>
+                                <li>Set joint emission reduction targets</li>
+                                <li>Share technologies and knowledge across countries</li>
+                                <li>Create international funds for environmental projects</li>
+                                <li>Develop coordinated adaptation strategies</li>
+                            </ul>
+                        </div>
+
+                        <div class="solution-item">
+                            <h3>3. Environmental education for youth</h3>
+                            <p>Integrate climate education into schools:</p>
+                            <ul>
+                                <li>Include environmental topics in curricula</li>
+                                <li>Organize hands-on conservation projects</li>
+                                <li>Encourage participation in green initiatives</li>
+                                <li>Create school environmental clubs</li>
+                            </ul>
+                        </div>
+
+                        <div class="solution-item">
+                            <h3>4. Reforestation and ecosystem cleanup</h3>
+                            <p>Restore and protect natural ecosystems:</p>
+                            <ul>
+                                <li>Organize tree planting campaigns</li>
+                                <li>Conduct regular beach and river cleanups</li>
+                                <li>Protect existing natural areas</li>
+                                <li>Create green corridors in urban areas</li>
+                            </ul>
+                        </div>
+
+                        <div class="solution-item">
+                            <h3>5. Improve energy efficiency</h3>
+                            <p>Implement measures to optimize energy use:</p>
+                            <ul>
+                                <li>Upgrade buildings with energy-saving technologies</li>
+                                <li>Improve public transport systems</li>
+                                <li>Develop smart electricity grids</li>
+                                <li>Promote sustainable construction</li>
+                            </ul>
+                        </div>
+                    `,
+                    impacto_heading: 'Why is climate change harmful?',
+                    impacto_html: `
+                        <h2>Why is climate change harmful?</h2>
+                        <p>Climate change represents one of the greatest threats to our planet and its inhabitants:</p>
+                        <ul>
+                            <li><strong>Sea level rise:</strong> Threatens coastal communities and can cause loss of habitable land.</li>
+                            <li><strong>Extreme weather events:</strong> Increased frequency of hurricanes, droughts and floods that affect millions of people.</li>
+                            <li><strong>Loss of biodiversity:</strong> Extinction of species and destruction of vital ecosystems.</li>
+                            <li><strong>Food insecurity:</strong> Impacts crops and reduces food production.</li>
+                            <li><strong>Health problems:</strong> Increased disease risk and public health challenges.</li>
+                        </ul>
+                        <p>Acting now is essential to protect our future and that of coming generations.</p>
+                    `,
+                    menu_title: 'choose your cocomoquinho!',
+                    menu_start: 'Start',
+                    startBtn: 'Start',
+                    pause: 'Pause',
+                    resume: 'Resume',
+                    restart: 'Restart',
+                        changeCharBtnLabel: 'Change character',
+                    scoreLabel: 'Score: ',
+                    timeLabel: 'Time: ',
+                    minigame_heading: 'Minigame: Catch the leaf',
+                    minigame_paragraph: 'Control the basket with left/right keys or by dragging/touching. Catch green leaves to earn points and avoid gray rocks.',
+                    footer: 'Together we can make a difference in the fight against climate change'
+                }
+                ,
+                fr: {
+                    title: 'Solutions pour le changement climatique',
+                    header: 'Solutions pour le changement climatique',
+                    nav_inicio: 'Accueil',
+                    nav_propuestas: 'Propositions',
+                    nav_desarrolladas: 'Solutions développées',
+                    nav_minijuego: 'Mini-jeu',
+                    nav_impacto: 'Pourquoi est-ce nocif?',
+                    image_description: 'Votre aide peut être essentielle pour sauver la planète. Ensemble, nous pouvons lutter contre le changement climatique en adoptant ces solutions au quotidien.',
+                    propuestas_heading: 'Propositions de solution',
+                    solutions_html: `
+                        <p>1. Utiliser des énergies renouvelables comme le solaire et l'éolien plutôt que les combustibles fossiles. Les combustibles fossiles émettent des gaz à effet de serre qui contribuent au réchauffement climatique. Passer aux énergies renouvelables réduit considérablement notre empreinte carbone.</p>
+
+                        <p>2. Réduire l'utilisation des véhicules à essence ou diesel et privilégier la marche, le vélo ou les transports en commun. Cela réduit les émissions polluantes et améliore la qualité de l'air.</p>
+
+                        <p>3. Réduire, réutiliser et recycler. En minimisant les déchets, nous réduisons la pollution et économisons des ressources naturelles.</p>
+
+                        <p>4. Limiter les plastiques à usage unique tels que sacs et bouteilles. Opter pour des alternatives réutilisables ou biodégradables.</p>
+
+                        <p>5. Réduire la consommation d'eau et de viande pour préserver les ressources naturelles et diminuer l'empreinte carbone.</p>
+                    `,
+                    desarrolladas_heading: 'Solutions les plus développées',
+                    desarrolladas_html: `
+                        <h2>Solutions les plus développées</h2>
+                        <div class="solution-item">
+                            <h3>1. Élaboration de politiques environnementales</h3>
+                            <p>Les gouvernements doivent mettre en œuvre des politiques efficaces pour lutter contre le changement climatique :</p>
+                            <ul>
+                                <li>Adopter des lois limitant les émissions de gaz à effet de serre</li>
+                                <li>Mettre en place des taxes carbone</li>
+                                <li>Encourager l'adoption des énergies renouvelables</li>
+                                <li>Protéger les écosystèmes</li>
+                            </ul>
+                        </div>
+                        <div class="solution-item">
+                            <h3>2. Accords internationaux</h3>
+                            <p>La coopération internationale est essentielle :</p>
+                            <ul>
+                                <li>Fixer des objectifs communs de réduction des émissions</li>
+                                <li>Partager les technologies et connaissances</li>
+                            </ul>
+                        </div>
+                    `,
+                    impacto_heading: 'Pourquoi le changement climatique est-il nocif?',
+                    impacto_html: `
+                        <h2>Pourquoi le changement climatique est-il nocif?</h2>
+                        <p>Le changement climatique menace les sociétés et les écosystèmes :</p>
+                        <ul>
+                            <li><strong>Montée du niveau de la mer :</strong> menace les zones côtières.</li>
+                            <li><strong>Événements climatiques extrêmes :</strong> ouragans, sécheresses et inondations.</li>
+                            <li><strong>Perte de biodiversité :</strong> extinction d'espèces.</li>
+                        </ul>
+                    `,
+                    menu_title: 'choisis ton cocomoquinho!',
+                    menu_start: 'Commencer',
+                    startBtn: 'Démarrer',
+                    pause: 'Pause',
+                    resume: 'Reprendre',
+                    restart: 'Redémarrer',
+                    changeCharBtnLabel: 'Changer de personnage',
+                    minigame_heading: 'Mini-jeu : Attrape la feuille',
+                    minigame_paragraph: 'Contrôlez le panier avec les touches gauche/droite ou en glissant/ touchant. Attrapez les feuilles vertes pour gagner des points et évitez les pierres grises.',
+                    scoreLabel: 'Points: ',
+                    timeLabel: 'Temps: ',
+                    footer: 'Ensemble, nous pouvons faire la différence dans la lutte contre le changement climatique'
+                },
+                de: {
+                    title: 'Lösungen für den Klimawandel',
+                    header: 'Lösungen für den Klimawandel',
+                    nav_inicio: 'Startseite',
+                    nav_propuestas: 'Vorschläge',
+                    nav_desarrolladas: 'Entwickelte Lösungen',
+                    nav_minijuego: 'Minispiel',
+                    nav_impacto: 'Warum ist es schädlich?',
+                    image_description: 'Ihre Hilfe kann entscheidend sein, um den Planeten zu retten. Gemeinsam können wir den Klimawandel bekämpfen, indem wir diese Lösungen im Alltag anwenden.',
+                    propuestas_heading: 'Vorgeschlagene Lösungen',
+                    solutions_html: `
+                        <p>1. Nutzung erneuerbarer Energien wie Solar- und Windenergie statt fossiler Brennstoffe. Fossile Brennstoffe verursachen Treibhausgasemissionen, die zur Erderwärmung beitragen.</p>
+
+                        <p>2. Weniger Nutzung von Benzin-/Dieselfahrzeugen; Gehen, Radfahren oder öffentliche Verkehrsmittel bevorzugen.</p>
+
+                        <p>3. Reduzieren, Wiederverwenden und Recyceln. Abfall minimieren und Ressourcen schonen.</p>
+
+                        <p>4. Einwegplastik verringern und wiederverwendbare Alternativen nutzen.</p>
+
+                        <p>5. Wasser- und Fleischkonsum reduzieren, um Ressourcen zu schonen und Emissionen zu senken.</p>
+                    `,
+                    desarrolladas_heading: 'Am weitesten entwickelte Lösungen',
+                    desarrolladas_html: `
+                        <h2>Am weitesten entwickelte Lösungen</h2>
+                        <div class="solution-item">
+                            <h3>1. Umweltpolitische Maßnahmen</h3>
+                            <p>Regierungen müssen effektive Maßnahmen ergreifen:</p>
+                            <ul>
+                                <li>Gesetze zur Begrenzung von Treibhausgasen</li>
+                                <li>Kohlenstoffpreisgestaltung</li>
+                            </ul>
+                        </div>
+                    `,
+                    impacto_heading: 'Warum ist der Klimawandel schädlich?',
+                    impacto_html: `
+                        <h2>Warum ist der Klimawandel schädlich?</h2>
+                        <p>Der Klimawandel stellt eine große Bedrohung dar:</p>
+                        <ul>
+                            <li><strong>Meeresspiegelanstieg:</strong> Gefährdet Küstengemeinden.</li>
+                            <li><strong>Extreme Wetterereignisse:</strong> Zunahme von Sturm, Dürre und Überschwemmungen.</li>
+                        </ul>
+                    `,
+                    menu_title: 'Wähle dein cocomoquinho!',
+                    menu_start: 'Starten',
+                    startBtn: 'Start',
+                    pause: 'Pause',
+                    resume: 'Fortsetzen',
+                    restart: 'Neustart',
+                    changeCharBtnLabel: 'Charakter wechseln',
+                    minigame_heading: 'Minispiel: Fang das Blatt',
+                    minigame_paragraph: 'Steuere den Korb mit den Pfeiltasten oder durch Ziehen/Touch. Fange grüne Blätter, vermeide graue Steine.',
+                    scoreLabel: 'Punkte: ',
+                    timeLabel: 'Zeit: ',
+                    footer: 'Gemeinsam können wir im Kampf gegen den Klimawandel einen Unterschied machen'
+                }
+            };
+
+            function t(key){ return (translations[currentLang] && translations[currentLang][key]) || ''; }
+
+            function applyLanguage(lang){
+                currentLang = lang;
+                // document language
+                document.documentElement.lang = lang;
+                // update title and header
+                document.title = t('title');
+                const h1 = document.querySelector('header h1'); if(h1) h1.textContent = t('header');
+                // nav
+                const nav = document.querySelector('.top-banner');
+                    if(nav){
+                        const anchors = nav.querySelectorAll('a');
+                        if(anchors[0]) anchors[0].textContent = t('nav_inicio');
+                        if(anchors[1]) anchors[1].textContent = t('nav_propuestas');
+                        if(anchors[2]) anchors[2].textContent = t('nav_desarrolladas');
+                        if(anchors[3]) anchors[3].textContent = t('nav_minijuego');
+                        if(anchors[4]) anchors[4].textContent = t('nav_impacto');
+                        // langBtn label: show uppercase code (and indicate available languages in title)
+                        if(langBtn){
+                            langBtn.textContent = lang.toUpperCase();
+                            langBtn.title = 'Languages: ES / EN / FR / DE';
+                        }
+                    }
+                // image description
+                const imgDesc = document.querySelector('.image-description'); if(imgDesc) imgDesc.textContent = t('image_description');
+                // proposals heading and solutions area
+                const prop = document.getElementById('propuestas'); if(prop) prop.textContent = t('propuestas_heading');
+                const solutionsArea = document.querySelector('.solutions-area'); if(solutionsArea) solutionsArea.innerHTML = translations[lang].solutions_html;
+                // minigame header and paragraph
+                const mgHead = document.querySelector('#minijuego h2'); if(mgHead) mgHead.textContent = t('minigame_heading');
+                const mgPara = document.querySelector('#minijuego p'); if(mgPara) mgPara.textContent = t('minigame_paragraph');
+                // advanced solutions heading and content
+                const desHead = document.querySelector('#desarrolladas h2'); if(desHead) desHead.textContent = t('desarrolladas_heading');
+                const advBox = document.querySelector('#desarrolladas'); if(advBox && translations[lang].desarrolladas_html) advBox.innerHTML = translations[lang].desarrolladas_html;
+                // climate impact heading and content
+                const impactHead = document.querySelector('.climate-impact h2'); if(impactHead) impactHead.textContent = t('impacto_heading');
+                const impactBox = document.querySelector('.climate-impact'); if(impactBox && translations[lang].impacto_html) impactBox.innerHTML = translations[lang].impacto_html;
+                // char menu title and start button
+                const menuTitle = document.querySelector('.char-menu-inner h3'); if(menuTitle) menuTitle.textContent = t('menu_title');
+                const menuStartBtn = document.getElementById('menuStartBtn'); if(menuStartBtn) menuStartBtn.textContent = t('menu_start');
+                // game control buttons
+                if(startBtn) startBtn.textContent = translations[lang].startBtn;
+                if(restartBtn) restartBtn.textContent = translations[lang].restart;
+                if(pauseBtn){
+                    // preserve paused state: if currently paused show Resume/ Reanudar accordingly
+                    if(paused) pauseBtn.textContent = t('resume'); else pauseBtn.textContent = t('pause');
+                    pauseBtn.setAttribute('aria-pressed', String(paused));
+                }
+                // HUD labels
+                if(scoreDisplay) scoreDisplay.textContent = t('scoreLabel') + Math.max(0, score);
+                if(timeDisplay) timeDisplay.textContent = t('timeLabel') + elapsed + 's';
+                // change character button label
+                const ccBtn = document.getElementById('changeCharBtn'); if(ccBtn) ccBtn.textContent = translations[lang].changeCharBtnLabel || ccBtn.textContent;
+                // footer
+                const footer = document.querySelector('footer p'); if(footer) footer.textContent = t('footer');
+            }
+
+            /* Audio removed per user request */
+            // Sprite cache for performance
+            const spriteCache = {};
+            // character selection state
+            const charSlots = [ { kind: 'head' }, { kind: 'empty' }, { kind: 'empty' }, { kind: 'empty' } ];
+            let selectedCharIndex = 0;
+            // preloaded image files found in project (user said they already added images)
+            const preloadedFiles = [
+                '636952fd6195a.jpeg',
+                '45-451215_download-pocoyo-with-glasses-hd-png-download.png',
+                'OIP (9).webp'
+            ];
+            // character display names (ordered to match slots 0..3)
+            // slot 0 = default head, slot 1 = sans, slot 2 = pocoyo, slot 3 = don limpio
+            const charNames = ['default','sans','pocoyo','don limpio'];
+            function createSprite(type, size){
+                const keySize = Math.max(8, Math.round(size/4)*4);
+                const cacheKey = type + ':' + keySize;
+                if(spriteCache[cacheKey]) return spriteCache[cacheKey];
+                const s = document.createElement('canvas');
+                s.width = keySize;
+                s.height = keySize;
+                const c = s.getContext('2d');
+                const cx = keySize/2;
+                const cy = keySize/2;
+                const r = keySize/2;
+                if(type === 'leaf'){
+                    c.fillStyle = '#2e7d32';
+                    c.beginPath();
+                    c.ellipse(cx, cy, r*0.9, r*0.55, -0.4, 0, Math.PI*2);
+                    c.fill();
+                    c.strokeStyle = 'rgba(255,255,255,0.25)';
+                    c.lineWidth = Math.max(1, keySize*0.06);
+                    c.beginPath();
+                    c.moveTo(cx - r*0.35, cy - r*0.1);
+                    c.quadraticCurveTo(cx, cy, cx + r*0.35, cy + r*0.1);
+                    c.stroke();
+                } else if(type === 'rock'){
+                    const grad = c.createRadialGradient(cx, cy - r*0.15, r*0.1, cx, cy, r);
+                    grad.addColorStop(0, 'rgba(180,180,180,0.95)');
+                    grad.addColorStop(0.6, 'rgba(150,150,150,0.6)');
+                    grad.addColorStop(1, 'rgba(120,120,120,0.2)');
+                    c.fillStyle = grad;
+                    c.beginPath();
+                    c.arc(cx, cy, r*0.9, 0, Math.PI*2);
+                    c.fill();
+                    c.globalAlpha = 0.6;
+                    c.beginPath(); c.arc(cx - r*0.45, cy - r*0.25, r*0.5, 0, Math.PI*2); c.fill();
+                    c.beginPath(); c.arc(cx + r*0.4, cy - r*0.2, r*0.45, 0, Math.PI*2); c.fill();
+                    c.globalAlpha = 1;
+                } else if(type === 'bomb'){
+                    c.fillStyle = '#111';
+                    c.beginPath(); c.arc(cx, cy, r*0.9, 0, Math.PI*2); c.fill();
+                    c.lineWidth = Math.max(2, r*0.12);
+                    c.strokeStyle = '#ffd600'; c.stroke();
+                    c.beginPath(); c.moveTo(cx - r*0.6, cy - r*0.15); c.lineTo(cx + r*0.6, cy + r*0.15); c.stroke();
+                } else if(type === 'water'){
+                    // bright cyan droplet with highlight
+                    const grad = c.createRadialGradient(cx - r*0.2, cy - r*0.3, r*0.1, cx, cy, r);
+                    grad.addColorStop(0, 'rgba(0,230,255,0.95)');
+                    grad.addColorStop(0.6, 'rgba(0,180,220,0.9)');
+                    grad.addColorStop(1, 'rgba(0,150,190,0.6)');
+                    c.fillStyle = grad;
+                    c.beginPath();
+                    c.ellipse(cx, cy, r*0.75, r*0.95, -0.3, 0, Math.PI*2);
+                    c.fill();
+                    // small highlight
+                    c.fillStyle = 'rgba(255,255,255,0.7)';
+                    c.beginPath();
+                    c.ellipse(cx - r*0.25, cy - r*0.35, r*0.18, r*0.12, -0.3, 0, Math.PI*2);
+                    c.fill();
+                } else if(type === 'head'){
+                    // simple stylized head
+                    // skin
+                    c.fillStyle = '#f3d9b1';
+                    c.beginPath(); c.arc(cx, cy, r*0.95, 0, Math.PI*2); c.fill();
+                    // hair
+                    c.fillStyle = '#5d4037';
+                    c.beginPath(); c.ellipse(cx, cy - r*0.3, r*0.95, r*0.5, 0, Math.PI, 2*Math.PI); c.fill();
+                    // eyes
+                    c.fillStyle = '#222';
+                    c.beginPath(); c.arc(cx - r*0.28, cy - r*0.05, Math.max(1, keySize*0.06), 0, Math.PI*2); c.fill();
+                    c.beginPath(); c.arc(cx + r*0.28, cy - r*0.05, Math.max(1, keySize*0.06), 0, Math.PI*2); c.fill();
+                }
+                spriteCache[cacheKey] = s;
+                return s;
+            }
+
+            function spawnItem(){
+                // item: {x,y,size, speed, type}
+                // avoid adding too many items
+                if(items.length >= MAX_ITEMS) return;
+                const x = Math.random() * (width - 30) + 15;
+                let size = Math.random() * 18 + 12;
+                // Decide type: leaf most common, rock less common, bomb uncommon, water very rare
+                const r = Math.random();
+                let type;
+                // Adjusted probabilities: water slightly more likely than bomb
+                if(r < 0.48) type = 'leaf';
+                else if(r < 0.82) type = 'rock';
+                else if(r < 0.90) type = 'bomb';
+                else type = 'water'; // ~10% water, ~8% bomb
+
+                // set speeds: leaves fastest, rocks medium, bombs slow
+                let speed;
+                if(type === 'leaf'){
+                    speed = Math.random() * 2.2 + 2.2; // faster leaves
+                } else if(type === 'rock'){
+                    speed = Math.random() * 0.9 + 1.6; // medium rocks
+                } else if(type === 'bomb'){
+                    speed = Math.random() * 0.6 + 1.0; // bombs slower
+                    // make bombs larger to be more visible
+                    size = size * 1.5;
+                } else if(type === 'water'){
+                    // water droplet: fast and larger and bright cyan
+                    speed = Math.random() * 2.0 + 2.4;
+                    size = Math.max(16, size * 1.6); // make water noticeably larger
+                }
+
+                const sprite = createSprite(type, size);
+                items.push({x, y: -size, size, speed, type, sprite});
+            }
+
+            // --- Character menu wiring ---
+            function renderCharPreviews(){
+                const slots = document.querySelectorAll('.char-slot');
+                slots.forEach(s => {
+                    const idx = Number(s.dataset.index);
+                    const preview = s.querySelector('.char-preview');
+                    const fnameNode = s.querySelector('[data-fname]');
+                    const slot = charSlots[idx];
+                    const pc = preview.getContext('2d');
+                    pc.clearRect(0,0,preview.width, preview.height);
+                    if(slot.kind === 'head'){
+                        const tmp = createSprite('head', 64);
+                        pc.drawImage(tmp, 0,0, preview.width, preview.height);
+                            if(fnameNode) fnameNode.textContent = charNames[idx] || 'Default';
+                    } else if(slot.kind === 'custom' && slot.img){
+                        const img = slot.img;
+                        try { pc.drawImage(img, 0,0, preview.width, preview.height); } catch(e) { /* ignore */ }
+                            // show the friendly character name if available
+                            if(fnameNode) fnameNode.textContent = charNames[idx] || slot.name || '';
+                    } else {
+                        // placeholder
+                        pc.fillStyle = '#e9f5ec'; pc.fillRect(0,0,preview.width, preview.height);
+                        pc.fillStyle = '#9e9e9e'; pc.fillRect(6, preview.height/2 - 6, preview.width-12, 12);
+                        if(fnameNode) fnameNode.textContent = '';
+                    }
+                    s.classList.toggle('selected', idx === selectedCharIndex);
+                });
+            }
+
+            // handle slot clicks and uploads
+            function setupCharMenu(){
+                // preload images from known project filenames into slots 1..3
+                for(let i=1;i<=3;i++){
+                    const fname = preloadedFiles[i-1];
+                    if(!fname) continue;
+                    const img = new Image();
+                    img.onload = ()=>{
+                        // assign friendly name from charNames if available
+                        const pname = charNames[i] || fname;
+                        charSlots[i] = { kind: 'custom', img: img, name: pname };
+                        renderCharPreviews();
+                    };
+                    img.onerror = ()=>{ /* ignore, leave empty slot */ };
+                    img.src = encodeURI(fname);
+                }
+
+                const slots = document.querySelectorAll('.char-slot');
+                slots.forEach(s => {
+                    const idx = Number(s.dataset.index);
+                    s.addEventListener('click', ()=>{
+                        selectedCharIndex = idx;
+                        renderCharPreviews();
+                    });
+                });
+
+                renderCharPreviews();
+                const menuStartBtn = document.getElementById('menuStartBtn');
+                const charMenu = document.getElementById('charMenu');
+                menuStartBtn.addEventListener('click', ()=>{
+                    // hide menu and start using selectedCharIndex
+                    charMenu.style.display = 'none';
+                    // ensure start button state consistent
+                    startBtn.disabled = true;
+                    // start the game
+                    startGame();
+                });
+            }
+
+
+            function update(dt){
+                // move basket by keys
+                if(keys['ArrowLeft'] || keys['Left']) basket.x -= 300 * dt;
+                if(keys['ArrowRight'] || keys['Right']) basket.x += 300 * dt;
+                // clamp
+                basket.x = Math.max(0, Math.min(width - basket.w, basket.x));
+
+                // update items
+                for(let i = items.length -1; i>=0; i--){
+                    const it = items[i];
+                    it.y += it.speed * 60 * dt;
+                    // collision
+                    if(it.y + it.size >= basket.y && it.x > basket.x - it.size && it.x < basket.x + basket.w + it.size){
+                        if(it.type === 'leaf') {
+                            score += 10;
+                        } else if(it.type === 'rock'){
+                            score -= 5;
+                        } else if(it.type === 'bomb'){
+                            // special: bomb resets score to zero and creates an explosion
+                            score = 0;
+                            explosions.push({ x: it.x, y: it.y, r: it.size/2, alpha: 1, life: 0 });
+                        } else if(it.type === 'water'){
+                            // rare bonus
+                            score += 200;
+                        }
+                        items.splice(i,1);
+                    } else if(it.y > height + 50) {
+                        items.splice(i,1);
+                    }
+                }
+                // spawn more frequently and occasionally in small bursts
+                // spawnMultiplier increases every 15s, capped at 120s
+                const timeSec = Math.floor(elapsed);
+                const increments = Math.min(8, Math.floor(timeSec / 15)); // 0..8 (8*15=120)
+                // smaller per-step increase so final multiplier remains reasonable
+                const spawnMultiplier = 1 + increments * 0.12; // each step increases spawn odds by 12%
+
+                if(Math.random() < 0.06 * spawnMultiplier) spawnItem();
+                if(Math.random() < 0.02 * spawnMultiplier) {
+                    // spawn a small burst of 1-3 extra items scaled by multiplier
+                    const burst = Math.floor((Math.random()*2 + 1) * spawnMultiplier);
+                    for(let b=0;b<burst;b++) spawnItem();
+                }
+
+                // update explosions
+                for(let e = explosions.length-1; e>=0; e--){
+                    const ex = explosions[e];
+                    ex.life += dt;
+                    ex.r += 60 * dt; // expand
+                    ex.alpha -= 0.9 * dt;
+                    if(ex.alpha <= 0) explosions.splice(e,1);
+                }
+            }
+
+            function draw(){
+                ctx.clearRect(0,0,width,height);
+                // draw basket: selected character (default head or custom image)
+                const slot = charSlots[selectedCharIndex] || { kind: 'head' };
+                if(slot.kind === 'head'){
+                    const headSprite = createSprite('head', Math.max(basket.w, basket.h));
+                    const hx = basket.x + basket.w/2 - headSprite.width/2;
+                    const hy = basket.y - headSprite.height/2;
+                    ctx.drawImage(headSprite, hx, hy, headSprite.width, headSprite.height);
+                } else if(slot.kind === 'custom' && slot.img){
+                    const img = slot.img;
+                    const drawW = Math.max(basket.w, 48);
+                    const drawH = Math.max(basket.h, 48);
+                    const hx = basket.x + basket.w/2 - drawW/2;
+                    const hy = basket.y - drawH/2;
+                    ctx.drawImage(img, hx, hy, drawW, drawH);
+                } else {
+                    // fallback to default head
+                    const headSprite = createSprite('head', Math.max(basket.w, basket.h));
+                    const hx = basket.x + basket.w/2 - headSprite.width/2;
+                    const hy = basket.y - headSprite.height/2;
+                    ctx.drawImage(headSprite, hx, hy, headSprite.width, headSprite.height);
+                }
+
+                // draw items using cached sprites
+                for(let i=0;i<items.length;i++){
+                    const it = items[i];
+                    const s = it.sprite || createSprite(it.type, it.size);
+                    // draw centered
+                    ctx.drawImage(s, it.x - s.width/2, it.y - s.height/2, s.width, s.height);
+                }
+
+                // draw explosions (red expanding circles)
+                explosions.forEach(ex=>{
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(255,50,50,' + Math.max(0, ex.alpha) + ')';
+                    ctx.arc(ex.x, ex.y, ex.r, 0, Math.PI*2);
+                    ctx.fill();
+                });
+            }
+
+            function loop(ts){
+                if(!running) return;
+                if(!startTime) startTime = ts;
+                const dt = Math.min(0.05, (ts - (loop.last || ts)) / 1000);
+                loop.last = ts;
+                elapsed = Math.floor((ts - startTime)/1000);
+                update(dt);
+                draw();
+                scoreDisplay.textContent = t('scoreLabel') + Math.max(0, score);
+                timeDisplay.textContent = t('timeLabel') + elapsed + 's';
+                rafId = requestAnimationFrame(loop);
+            }
+
+            function startGame(){
+                // fully reset state
+                items = [];
+                explosions = [];
+                score = 0;
+                elapsed = 0;
+                startTime = 0;
+                loop.last = 0;
+                // cancel any previous RAF to avoid duplicates
+                if(rafId) cancelAnimationFrame(rafId);
+                running = true;
+                // disable start button while running
+                startBtn.disabled = true;
+                // reset pause state
+                if(pauseBtn) { paused = false; pauseBtn.setAttribute('aria-pressed', 'false'); if(pauseBtn) pauseBtn.textContent = t('pause'); }
+                // ensure rafId reset then start loop
+                rafId = requestAnimationFrame(loop);
+            }
+
+            function restartGame(){
+                // same behavior as startGame: full reset and cancel any previous RAF
+                items = [];
+                explosions = [];
+                score = 0;
+                elapsed = 0;
+                startTime = 0;
+                loop.last = 0;
+                if(rafId) cancelAnimationFrame(rafId);
+                running = true;
+                startBtn.disabled = true;
+                // reset pause button state
+                if(pauseBtn) { paused = false; pauseBtn.setAttribute('aria-pressed', 'false'); if(pauseBtn) pauseBtn.textContent = t('pause'); }
+                rafId = requestAnimationFrame(loop);
+            }
+
+            // input
+            window.addEventListener('keydown', e=>{ keys[e.key] = true; });
+            window.addEventListener('keyup', e=>{ keys[e.key] = false; });
+
+            // touch / drag support for basket
+            let dragging = false;
+            canvas.addEventListener('mousedown', e=>{ dragging = true; moveBasket(e.clientX); });
+            canvas.addEventListener('mousemove', e=>{ if(dragging) moveBasket(e.clientX); });
+            window.addEventListener('mouseup', ()=>{ dragging = false; });
+            canvas.addEventListener('touchstart', e=>{ dragging = true; moveBasket(e.touches[0].clientX); e.preventDefault(); });
+            canvas.addEventListener('touchmove', e=>{ if(dragging) moveBasket(e.touches[0].clientX); e.preventDefault(); });
+            canvas.addEventListener('touchend', ()=>{ dragging = false; });
+
+            function moveBasket(clientX){
+                const rect = canvas.getBoundingClientRect();
+                const x = clientX - rect.left;
+                basket.x = Math.max(0, Math.min(width - basket.w, x - basket.w/2));
+            }
+
+            // buttons
+            startBtn.addEventListener('click', ()=>{ if(!running) startGame(); });
+            restartBtn.addEventListener('click', ()=>{ restartGame(); });
+            // Pause toggles running but preserves state (does not reset)
+            let paused = false;
+            pauseBtn.addEventListener('click', ()=>{
+                // allow toggling when paused (running may be false when paused)
+                if(!running && !paused) return; // nothing to pause/resume if never started
+                paused = !paused;
+                pauseBtn.setAttribute('aria-pressed', String(paused));
+                    if(paused){
+                    // pause: stop RAF but keep state
+                    if(rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                    running = false;
+                    pauseBtn.textContent = t('resume');
+                    // keep startBtn disabled so resume is done via this button
+                } else {
+                    // resume: continue without resetting timers
+                    running = true;
+                    // set startTime so elapsed continues from previous value
+                    const now = performance.now();
+                    startTime = now - elapsed*1000;
+                    // reset loop.last to avoid a large dt on resume
+                    loop.last = now;
+                    // ensure RAF is unique
+                    if(rafId) cancelAnimationFrame(rafId);
+                    rafId = requestAnimationFrame(loop);
+                    pauseBtn.textContent = t('pause');
+                    // while running, disable start button to avoid accidental new starts
+                    startBtn.disabled = true;
+                }
+            });
+
+            // wire change character button (cycles through first 3 characters)
+            const changeCharBtn = document.getElementById('changeCharBtn');
+            if(changeCharBtn){
+                changeCharBtn.addEventListener('click', ()=>{
+                    // cycle through all available slots (0..charSlots.length-1)
+                    selectedCharIndex = (selectedCharIndex + 1) % charSlots.length;
+                    renderCharPreviews();
+                });
+            }
+
+            // language toggle wiring
+            if(langBtn){
+                const langOrder = ['es','en','fr','de'];
+                langBtn.addEventListener('click', ()=>{
+                    const idx = Math.max(0, langOrder.indexOf(currentLang));
+                    const next = langOrder[(idx + 1) % langOrder.length];
+                    currentLang = next;
+                    applyLanguage(currentLang);
+                });
+            }
+
+            // initialize character menu wiring after DOM ready
+            setupCharMenu();
+            // if menu visible (initial load), disable the inline Start button to force menu start
+            if(document.getElementById('charMenu')) startBtn.disabled = true;
+
+            // resize handling
+            function onResize(){
+                const rect = canvas.getBoundingClientRect();
+                // keep internal size fixed for simplicity; canvas displayed size adapts via CSS
+                width = canvas.width;
+                height = canvas.height;
+                basket.y = height - 30;
+            }
+            window.addEventListener('resize', onResize);
+            onResize();
+
+            // ensure UI uses initial language
+            // paused variable is declared above; apply initial language state
+            applyLanguage(currentLang);
+
+            // expose for debugging
+            window.__minijuego = { start: startGame, restart: restartGame };
+        })();
+    </script>
+    <div id="authorTag">Autor: Erick X. Veloz</div>
+</body>
+</html>
